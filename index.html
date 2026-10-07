@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grand Jodus 服務利潤鏈與人力資源投資沙盤模擬</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f7ff; /* 礁溪清爽天青底色 */
+            background-image: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 40%, #e0e7ff 100%);
+            color: #1e293b; /* 優雅深石板灰 */
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85); /* 珍珠柔白磨砂玻璃 */
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(14, 165, 233, 0.2); /* 柔和天空藍邊框 */
+            box-shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.15);
+        }
+        .text-glow-gold {
+            color: #b45309; /* 琥珀深金 */
+            text-shadow: 0 2px 4px rgba(217, 119, 6, 0.15);
+        }
+        .text-glow-green {
+            color: #047857;
+            text-shadow: 0 2px 4px rgba(52, 211, 153, 0.2);
+        }
+        .text-glow-red {
+            color: #be123c;
+            text-shadow: 0 2px 4px rgba(251, 113, 133, 0.25);
+        }
+        /* Custom scrollbar matching elegant sky blue */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0f9ff;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bae6fd;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7dd3fc;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.97); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <!-- 首頁引導畫面 (Welcome / Intro Screen) -->
+    <div id="welcome-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-cover bg-center transition-all duration-500" style="background-image: url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1600&q=80');">
+        <!-- 晶透天青與溫柔白遮罩 -->
+        <div class="absolute inset-0 bg-sky-950/40 backdrop-blur-md"></div>
+        
+        <div class="relative z-10 max-w-3xl w-full mx-4 p-6 md:p-10 glass-card rounded-3xl border border-sky-200/50 shadow-2xl animate-fade-in flex flex-col gap-6 max-h-[92vh] overflow-y-auto">
+            <!-- 飯店標誌與名稱 -->
+            <div class="text-center">
+                <div class="inline-flex bg-gradient-to-tr from-sky-500 to-indigo-500 p-4 rounded-full text-white shadow-xl mb-3">
+                    <i class="fa-solid fa-hot-tub-person text-3xl"></i>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-extrabold tracking-wider text-sky-900 text-glow-gold">Grand Jodus 連鎖星級飯店</h1>
+                <p class="text-xs md:text-sm text-sky-700 font-bold tracking-widest mt-1 uppercase">宜蘭礁溪溫泉旗艦會館．HBS 服務利潤鏈與人資投資沙盤</p>
+            </div>
+
+            <!-- 情境背景介紹 -->
+            <div class="bg-white/90 p-5 rounded-2xl border border-sky-100 leading-relaxed text-xs md:text-sm text-slate-700 space-y-3 shadow-inner">
+                <h3 class="font-bold text-sky-900 flex items-center gap-1.5 text-sm md:text-base border-b border-sky-100 pb-2">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-500"></i> 當前營運危機：宜蘭礁溪旗艦店深陷「失敗循環」
+                </h3>
+                <p><b>歷史背景故事：</b></p>
+                <p>坐落於蘭陽平原群山環抱、頂級美人湯泉景區最核心的 <b>Grand Jodus 宜蘭礁溪溫泉飯店</b>，曾是由本土創辦人喬氏家族親自經營、以溫潤細緻的台式溫泉款待文化與無微不至的貼心服務聞名，是許多高端客群指名入住的避世聖地。然而，三年前飯店被跨國投資基金接管，新任經理人為迅速交出短期獲利，實施了極端的<b>「控本策略」</b>：</p>
+                <p class="text-rose-700/90 border-l-2 border-rose-400 pl-3 bg-rose-50/50 py-1 rounded-r-lg">
+                    他們大量解雇了熟悉礁溪在地客群的資深領班、全面將基層薪資壓低至基本工資邊緣、停辦了所有星級服務教育訓練，並收回了第一線人員的即時客訴處置授權以「嚴防弊端與財務浪費」。
+                </p>
+                <p>短期內帳面成本確實下降了，但惡果隨之而來：前線出錯率飆升、礁溪美人湯的奢華體驗不復存在、顧客抱怨連連、高端回頭客集體流失。目前飯店已深陷於典型的「失敗循環」中。當您打開接班的現有財報，數據極其慘烈：</p>
+                
+                <div class="grid grid-cols-3 gap-3 text-center my-3">
+                    <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100">
+                        <div class="text-[10px] text-slate-500 font-bold uppercase">基層年流動率</div>
+                        <div class="text-sm md:text-base font-black text-rose-600 mt-1">112.4 %</div>
+                    </div>
+                    <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100">
+                        <div class="text-[10px] text-slate-500 font-bold uppercase">單季虧損 (P&L)</div>
+                        <div class="text-sm md:text-base font-black text-rose-600 mt-1">NT$ -2,485,000</div>
+                    </div>
+                    <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100">
+                        <div class="text-[10px] text-slate-500 font-bold uppercase">顧客滿意度 (CS)</div>
+                        <div class="text-sm md:text-base font-black text-rose-600 mt-1">42.1 / 100</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 總經理三大核心任務 -->
+            <div class="space-y-3">
+                <h3 class="font-bold text-slate-800 text-xs md:text-sm uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-check text-sky-600"></i> 您的總經理核心任務 (General Manager Mission)
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                    <div class="p-3 bg-white/70 rounded-xl border border-sky-100 flex gap-2 shadow-sm">
+                        <div class="text-amber-600 text-sm mt-0.5"><i class="fa-solid fa-coins"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 mb-0.5">優化策略預算分配</h4>
+                            <p class="text-slate-600 leading-snug">平衡薪資福利、教育訓練與員工授權，擺脫盲目扣減人事成本的短視思維。</p>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-white/70 rounded-xl border border-sky-100 flex gap-2 shadow-sm">
+                        <div class="text-sky-600 text-sm mt-0.5"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 mb-0.5">化解關鍵時刻危機</h4>
+                            <p class="text-slate-600 leading-snug">妥善應對突發「關鍵時刻 (MOT)」客怨，檢驗您對前線的支援與授權配置。</p>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-white/70 rounded-xl border border-sky-100 flex gap-2 shadow-sm">
+                        <div class="text-indigo-600 text-sm mt-0.5"><i class="fa-solid fa-rotate"></i></div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 mb-0.5">啟動礁溪成功循環</h4>
+                            <p class="text-slate-600 leading-snug">在有限預算下找出「最適」而非「最大」的配置，同時兼顧獲利、留任與顧客滿意。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 開始行動按鈕 -->
+            <div class="pt-2">
+                <button onclick="startGame()" class="w-full py-3.5 bg-gradient-to-r from-sky-600 via-blue-500 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-extrabold rounded-xl shadow-lg shadow-sky-200/50 transition-all duration-200 transform active:scale-[0.98] flex items-center justify-center gap-2">
+                    <span>接受委任，即刻入主 Grand Jodus 礁溪會館</span> <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <p class="text-center text-[10px] text-slate-500 mt-2">※ 本沙盤以 Heskett et al.（1994）服務利潤鏈原型為骨架，並依 Hogreve et al.（2017）後設分析與 Hogreve et al.（2022）修正觀點調整因果結構。模型為教學用簡化，數值不代表真實產業資料。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 遊戲主畫面容器 (Game Content Screen, 初始隱藏) -->
+    <div id="game-screen" class="hidden min-h-screen flex flex-col justify-between">
+        
+        <!-- 頂部導覽列 -->
+        <header class="border-b border-sky-100 bg-white/95 sticky top-0 z-40 backdrop-blur-md shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-tr from-sky-500 to-indigo-500 p-2 rounded-lg text-white shadow-lg">
+                        <i class="fa-solid fa-hot-tub-person text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold tracking-wider text-sky-900">Grand Jodus 連鎖星級飯店</h1>
+                        <p class="text-xs text-sky-600 font-bold">宜蘭礁溪溫泉旗艦會館．服務利潤鏈策略沙盤</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="quarter-tag" class="px-3 py-1 bg-rose-100 text-rose-700 border border-rose-200 rounded-full text-xs font-semibold uppercase tracking-wider animate-pulse">
+                        第 0 季度（瀕臨危機）
+                    </span>
+                    <button onclick="restartGame()" class="px-3 py-1.5 bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 rounded-lg text-xs font-medium transition flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-right"></i> 重置沙盤
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主體內容 -->
+        <main class="max-w-7xl mx-auto px-4 py-6 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
+            
+            <!-- 左側：決策控制面板 (38%) -->
+            <section class="lg:col-span-5 flex flex-col gap-6">
+                
+                <!-- 任務簡報卡 -->
+                <div class="glass-card rounded-2xl p-5 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 text-sky-200/20 text-9xl font-bold select-none pointer-events-none">
+                        GM
+                    </div>
+                    <h2 class="text-md font-bold text-sky-900 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-user text-sky-600"></i> 總經理當前策略指引
+                    </h2>
+                    <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
+                        <p>您已接管擁有 50 名一線員工的礁溪度假飯店。基層怨氣沖天，將導致極高的流動率與怠工風險。請在以下預算滑桿中，規劃本季度的資源配置策略。</p>
+                        <p class="text-sky-700 font-bold">★ 策略目標：在 4 季度內重新分配資源，優化薪資、培訓與授權，啟動「成功循環」，扭虧為盈！</p>
+                    </div>
+                    
+                    <!-- 季度預算警告 -->
+                    <div class="mt-4 p-3 bg-sky-50 border border-sky-100 rounded-xl flex items-start gap-2.5">
+                        <i class="fa-solid fa-circle-info text-sky-600 text-sm mt-0.5"></i>
+                        <div class="text-[11px] text-slate-600 leading-snug">
+                            <strong>MBA 策略提示：</strong> 每季人資預算（薪資＋訓練）有上限，上季虧損擴大時董事會會再縮減預算（失敗循環），獲利則會放寬（成功循環）。服務利潤鏈的價值發酵需要<strong>「時間落差（Time Lag）」</strong>，而且<strong>更多不一定更好</strong>：過高的服務品質與授權都有成本。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 策略滑桿調整區 -->
+                <div class="glass-card rounded-2xl p-5 shadow-2xl flex-grow flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-md font-bold text-slate-800 mb-4 flex items-center justify-between">
+                            <span><i class="fa-solid fa-sliders text-sky-600 mr-2"></i>策略預算分配</span>
+                            <span class="text-xs text-slate-500 font-normal text-right">本季人資支出: <span id="variable-cost-display" class="text-sky-700 font-bold">NT$ 2,100,000</span><br>董事會預算上限: <span id="budget-cap-display" class="text-slate-700 font-bold">NT$ 9,000,000</span></span>
+                        </h2>
+
+                        <!-- Slider 1: Compensation -->
+                        <div class="mb-5 bg-white/70 p-4 rounded-xl border border-sky-100 shadow-sm">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-money-bill-wave text-emerald-600"></i> 薪資與福利結構 (C)
+                                </label>
+                                <span id="val-C" class="text-sm font-bold text-emerald-600">20 / 100</span>
+                            </div>
+                            <input type="range" id="slide-C" min="10" max="100" value="20" oninput="updateSliders()" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-500">
+                            <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                                <span>極低薪 (維持現狀)</span>
+                                <span>行業均值 (50)</span>
+                                <span>跨國頂級福利標竿 (100)</span>
+                            </div>
+                            <p id="desc-C" class="text-[11px] text-slate-600 mt-2 bg-slate-50 p-1.5 rounded text-left leading-normal"></p>
+                            <!-- 降薪警語提示 -->
+                            <div class="text-[9px] text-rose-600 mt-1 flex items-center gap-1 bg-rose-50 p-1 rounded border border-rose-100">
+                                <i class="fa-solid fa-triangle-exclamation"></i> 提示：調降薪資會觸發「損失規避」心理效應，導致員工滿意度急遽重創。
+                            </div>
+                        </div>
+
+                        <!-- Slider 2: Training -->
+                        <div class="mb-5 bg-white/70 p-4 rounded-xl border border-sky-100 shadow-sm">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-graduation-cap text-sky-600"></i> 教育訓練投入 (T)
+                                </label>
+                                <span id="val-T" class="text-sm font-bold text-sky-600">10 / 100</span>
+                            </div>
+                            <input type="range" id="slide-T" min="0" max="100" value="10" oninput="updateSliders()" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-500">
+                            <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                                <span>無培訓 (維持現狀)</span>
+                                <span>基礎技術 SOP (50)</span>
+                                <span>五星奢華精緻培訓 (100)</span>
+                            </div>
+                            <p id="desc-T" class="text-[11px] text-slate-600 mt-2 bg-slate-50 p-1.5 rounded text-left leading-normal"></p>
+                        </div>
+
+                        <!-- Slider 3: Empowerment -->
+                        <div class="mb-5 bg-white/70 p-4 rounded-xl border border-sky-100 shadow-sm">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-hand-holding-heart text-amber-600"></i> 前線第一線授權 (E)
+                                </label>
+                                <span id="val-E" class="text-sm font-bold text-amber-600">10 / 100</span>
+                            </div>
+                            <input type="range" id="slide-E" min="0" max="100" value="10" oninput="updateSliders()" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-500">
+                            <div class="flex justify-between text-[10px] text-slate-500 mt-1">
+                                <span>無授權 (凡事簽核)</span>
+                                <span>客訴免單權 (50)</span>
+                                <span>極致完全處置授權 (100)</span>
+                            </div>
+                            <p id="desc-E" class="text-[11px] text-slate-600 mt-2 bg-slate-50 p-1.5 rounded text-left leading-normal"></p>
+                        </div>
+                    </div>
+
+                    <!-- 預算超標警示 -->
+                    <div id="budget-warning" class="hidden mb-3 text-[11px] text-rose-700 bg-rose-50 border border-rose-200 rounded-lg p-2.5 leading-snug">
+                        <i class="fa-solid fa-ban mr-1"></i> 本季人資支出超過董事會核定的預算上限，請調降薪資或訓練後再提交。
+                    </div>
+                    <!-- 進入下一回合按鈕 -->
+                    <div class="pt-4 border-t border-sky-100">
+                        <button id="btn-next-quarter" onclick="triggerQuarterEvent()" class="w-full py-3.5 bg-gradient-to-r from-sky-600 via-blue-500 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-sky-200/50 transition-all duration-200 transform active:scale-[0.98] flex items-center justify-center gap-2">
+                            <span id="next-btn-text">提交策略，進入第 1 季度</span> <i class="fa-solid fa-chevron-right text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- 右側：資料儀表板與視覺化 (62%) -->
+            <section class="lg:col-span-7 flex flex-col gap-6">
+                
+                <!-- 四大核心 KPI 指標 -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- 淨利 -->
+                    <div class="glass-card rounded-xl p-4 flex flex-col justify-between relative overflow-hidden">
+                        <div class="text-slate-500 text-[10px] font-bold tracking-wider uppercase mb-1">本季淨損益 (P&L)</div>
+                        <div class="flex items-baseline gap-1">
+                            <span id="kpi-profit" class="text-base md:text-lg font-black text-rose-600">NT$ -2,485,000</span>
+                        </div>
+                        <div class="text-[10px] mt-2 flex items-center justify-between" id="kpi-profit-change">
+                            <span class="text-slate-400">歷史累計:</span>
+                            <span id="kpi-cum-profit" class="font-semibold text-rose-600">NT$ -2,485,000</span>
+                        </div>
+                        <div class="absolute -right-2 -bottom-2 text-sky-100 text-4xl">
+                            <i class="fa-solid fa-coins"></i>
+                        </div>
+                    </div>
+
+                    <!-- 員工流動率 -->
+                    <div class="glass-card rounded-xl p-4 flex flex-col justify-between relative overflow-hidden">
+                        <div class="text-slate-500 text-[10px] font-bold tracking-wider uppercase mb-1">基層流動率</div>
+                        <div>
+                            <span id="kpi-turnover" class="text-lg md:text-xl font-black text-rose-600">112.4%</span>
+                        </div>
+                        <div class="text-[10px] mt-2 flex items-center gap-1 text-rose-600 font-medium" id="kpi-turnover-status">
+                            <i class="fa-solid fa-triangle-exclamation"></i> 失敗循環指標
+                        </div>
+                        <div class="absolute -right-2 -bottom-2 text-sky-100 text-4xl">
+                            <i class="fa-solid fa-user-slash"></i>
+                        </div>
+                    </div>
+
+                    <!-- 顧客滿意度 -->
+                    <div class="glass-card rounded-xl p-4 flex flex-col justify-between relative overflow-hidden">
+                        <div class="text-slate-500 text-[10px] font-bold tracking-wider uppercase mb-1">顧客滿意度 (CS)</div>
+                        <div>
+                            <span id="kpi-cs" class="text-lg md:text-xl font-black text-amber-600">42.1 / 100</span>
+                        </div>
+                        <div class="text-[10px] mt-2 flex items-center gap-1 text-rose-600 font-medium" id="kpi-cs-status">
+                            <i class="fa-solid fa-face-frown"></i> 客服爆發投訴
+                        </div>
+                        <div class="absolute -right-2 -bottom-2 text-sky-100 text-4xl">
+                            <i class="fa-solid fa-face-smile"></i>
+                        </div>
+                    </div>
+
+                    <!-- 顧客忠誠度 -->
+                    <div class="glass-card rounded-xl p-4 flex flex-col justify-between relative overflow-hidden">
+                        <div class="text-slate-500 text-[10px] font-bold tracking-wider uppercase mb-1">顧客忠誠/回頭率</div>
+                        <div>
+                            <span id="kpi-loyalty" class="text-lg md:text-xl font-black text-amber-600">17.7%</span>
+                        </div>
+                        <div class="text-[10px] mt-2 flex items-center justify-between text-slate-500 font-medium" id="kpi-revenue">
+                            <span>本季營收:</span>
+                            <span id="val-revenue" class="font-bold text-slate-700">NT$ 1,240 萬</span>
+                        </div>
+                        <div class="absolute -right-2 -bottom-2 text-sky-100 text-4xl">
+                            <i class="fa-solid fa-users-viewfinder"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 哈佛服務利潤鏈互動鏈路圖 (SPC Flow) -->
+                <div class="glass-card rounded-2xl p-5 shadow-2xl">
+                    <h2 class="text-sm font-bold text-slate-800 mb-4 flex items-center justify-between border-b border-sky-100 pb-2">
+                        <span><i class="fa-solid fa-network-wired text-sky-600 mr-2"></i>服務利潤鏈 (Service-Profit Chain) 實時模擬流向圖</span>
+                        <span class="text-[11px] bg-sky-50 px-2 py-0.5 rounded text-sky-700 border border-sky-100">宜蘭礁溪數據運算</span>
+                    </h2>
+                    
+                    <!-- SPC Pipeline Steps -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center text-xs">
+                        <div id="spc-1" class="bg-white/80 p-3 rounded-xl border border-rose-200 flex flex-col justify-between h-28 transition-all duration-300">
+                            <div class="text-slate-500 text-[9px] font-bold">1. 內部服務品質</div>
+                            <div class="my-1.5 flex justify-center text-rose-500"><i class="fa-solid fa-briefcase text-xl"></i></div>
+                            <div id="spc-val-1" class="font-bold text-rose-600 text-[10px]">技能存量 10</div>
+                        </div>
+                        <div id="spc-2" class="bg-white/80 p-3 rounded-xl border border-rose-200 flex flex-col justify-between h-28 transition-all duration-300">
+                            <div class="text-slate-500 text-[9px] font-bold">2. 員工滿意／福祉</div>
+                            <div class="my-1.5 flex justify-center text-rose-500"><i class="fa-solid fa-face-meh text-xl"></i></div>
+                            <div id="spc-val-2" class="font-bold text-rose-600 text-[10px]">滿意 34｜福祉 38</div>
+                        </div>
+                        <div id="spc-3" class="bg-white/80 p-3 rounded-xl border border-rose-200 flex flex-col justify-between h-28 transition-all duration-300">
+                            <div class="text-slate-500 text-[9px] font-bold">3. 員工留任</div>
+                            <div class="my-1.5 flex justify-center text-rose-500"><i class="fa-solid fa-id-card-clip text-xl"></i></div>
+                            <div id="spc-val-3" class="font-bold text-rose-600 text-[10px]">留任 43.8%</div>
+                        </div>
+                        <div id="spc-4" class="bg-white/80 p-3 rounded-xl border border-rose-200 flex flex-col justify-between h-28 transition-all duration-300">
+                            <div class="text-slate-500 text-[9px] font-bold">4. 員工生產力</div>
+                            <div class="my-1.5 flex justify-center text-rose-500"><i class="fa-solid fa-bolt text-xl"></i></div>
+                            <div id="spc-val-4" class="font-bold text-rose-600 text-[10px]">低落 (29)</div>
+                        </div>
+                        <div id="spc-5" class="bg-white/80 p-3 rounded-xl border border-rose-200 flex flex-col justify-between h-28 transition-all duration-300">
+                            <div class="text-slate-500 text-[9px] font-bold">5. 外部服務品質</div>
+                            <div class="my-1.5 flex justify-center text-rose-500"><i class="fa-solid fa-concierge-bell text-xl"></i></div>
+                            <div id="spc-val-5" class="font-bold text-rose-600 text-[10px]">差 (19)</div>
+                        </div>
+                        <div id="spc-6" class="bg-white/80 p-3 rounded-xl border border-rose-200 flex flex-col justify-between h-28 transition-all duration-300">
+                            <div class="text-slate-500 text-[9px] font-bold">6. 顧客滿意度</div>
+                            <div class="my-1.5 flex justify-center text-rose-500"><i class="fa-solid fa-award text-xl"></i></div>
+                            <div id="spc-val-6" class="font-bold text-rose-600 text-[10px]">差 (42.1)</div>
+                        </div>
+                        <div id="spc-7" class="bg-white/80 p-3 rounded-xl border border-rose-200 flex flex-col justify-between h-28 transition-all duration-300">
+                            <div class="text-slate-500 text-[9px] font-bold">7. 顧客忠誠度</div>
+                            <div class="my-1.5 flex justify-center text-rose-500"><i class="fa-solid fa-arrow-rotate-left text-xl"></i></div>
+                            <div id="spc-val-7" class="font-bold text-rose-600 text-[10px]">回頭 17.7%</div>
+                        </div>
+                        <div id="spc-8" class="bg-white/80 p-3 rounded-xl border border-rose-200 flex flex-col justify-between h-28 transition-all duration-300">
+                            <div class="text-slate-500 text-[9px] font-bold">8. 企業績效</div>
+                            <div class="my-1.5 flex justify-center text-rose-500"><i class="fa-solid fa-chart-line text-xl"></i></div>
+                            <div id="spc-val-8" class="font-bold text-rose-600 text-[10px]">虧損赤字</div>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-3 leading-snug">依 Hogreve et al.（2017）：內部服務品質除了透過員工滿意，也直接影響生產力與外部服務品質；員工滿意對顧客滿意的直接效果（滿意鏡像）較弱。</p>
+                </div>
+
+                <!-- 歷史趨勢折線圖 (Chart.js) -->
+                <div class="glass-card rounded-2xl p-5 shadow-2xl grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-700 mb-2 flex items-center justify-between">
+                            <span><i class="fa-solid fa-chart-area text-sky-600 mr-1.5"></i>財務收支走勢圖</span>
+                        </h3>
+                        <div class="h-44 relative">
+                            <canvas id="financeChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-700 mb-2 flex items-center justify-between">
+                            <span><i class="fa-solid fa-chart-line text-emerald-600 mr-1.5"></i>流動率與滿意度變化</span>
+                        </h3>
+                        <div class="h-44 relative">
+                            <canvas id="kpiChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- 服務利潤鏈模型說明 -->
+        <section class="max-w-7xl mx-auto px-4 pb-12 w-full mt-4">
+            <div class="glass-card rounded-2xl p-6 border-sky-100">
+                <h2 class="text-md font-extrabold text-sky-900 mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-graduation-cap text-sky-600"></i> 模型背後的文獻：從原型、修正到重新想像
+                </h2>
+                <p class="text-[11px] text-slate-500 mb-4">Heskett et al.（1994）提出原型；Hogreve et al.（2017）以 518 篇研究的後設分析檢驗；Hogreve et al.（2022）提出修正與 AI 時代的重新想像。以下公式為教學簡化版本。</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600 leading-relaxed">
+                    <div class="bg-white/95 p-4 rounded-xl border border-sky-50 shadow-sm">
+                        <h3 class="font-bold text-emerald-700 text-sm mb-2">1. 員工滿意＋福祉</h3>
+                        <p class="font-mono bg-sky-50/50 border border-sky-100 p-2 rounded text-[10px] text-emerald-700 mb-2">ES = f(薪資, 訓練) + 0.1×(上季CS−50) − 降薪懲罰</p>
+                        <p>薪資與訓練對滿意度有邊際遞減；降薪觸發損失規避。顧客滿意也會回饋員工（Shepherd et al., 2020，轉引）。另設員工福祉指標：人力缺口造成的工作負荷會壓低福祉，進而影響留任與生產力（Hogreve et al., 2022 修正方向②）。</p>
+                    </div>
+                    <div class="bg-white/95 p-4 rounded-xl border border-sky-50 shadow-sm">
+                        <h3 class="font-bold text-sky-700 text-sm mb-2">2. 人資管理系統：訓練 × 授權</h3>
+                        <p class="font-mono bg-sky-50/50 border border-sky-100 p-2 rounded text-[10px] text-sky-700 mb-2">技能存量 SK = 0.5×SK上季 + 0.5×T；授權效果 = E×(SK−40)/60</p>
+                        <p>訓練有一半要到下一季才發酵。技能未達 40 時授權反而有害（Q1 傳奇補救也需技能存量 ≥ 40 才能解鎖）；授權超過 70 則出現「甜心交易」成本。人資實務是一個系統，組合得好才有綜效（Hogreve et al., 2022 修正方向①③）。</p>
+                    </div>
+                    <div class="bg-white/95 p-4 rounded-xl border border-sky-50 shadow-sm">
+                        <h3 class="font-bold text-indigo-700 text-sm mb-2">3. 外部服務品質與「內向」風險</h3>
+                        <p class="font-mono bg-sky-50/50 border border-sky-100 p-2 rounded text-[10px] text-indigo-700 mb-2">ESQ = f(生產力, 技能, 授權)；員工滿意 ≫ ESQ 時，顧客忠誠受損</p>
+                        <p>內部服務品質直接影響生產力與外部服務品質。若員工很滿意，卻沒有轉化為對顧客的服務，組織可能過度內向，對顧客忠誠產生負向效果（Hogreve et al., 2017）。</p>
+                    </div>
+                    <div class="bg-white/95 p-4 rounded-xl border border-sky-50 shadow-sm">
+                        <h3 class="font-bold text-amber-700 text-sm mb-2">4. 顧客忠誠：三區曲線與忠誠對象</h3>
+                        <p class="font-mono bg-sky-50/50 border border-sky-100 p-2 rounded text-[10px] text-amber-700 mb-2">CL = S 型曲線(CS) + 生產力直接效果 − 內向懲罰 − 員工帶走的顧客</p>
+                        <p>滿意與忠誠呈 S 型：背離區、無差異區、情感區（Heskett et al., 1994）。授權高、關係個人化時，顧客較可能忠於員工；員工離職會帶走顧客（Hogreve et al., 2022 修正方向③）。</p>
+                    </div>
+                    <div class="bg-white/95 p-4 rounded-xl border border-sky-50 shadow-sm">
+                        <h3 class="font-bold text-rose-700 text-sm mb-2">5. 品質報酬：更多不一定更好</h3>
+                        <p class="font-mono bg-sky-50/50 border border-sky-100 p-2 rounded text-[10px] text-rose-700 mb-2">營收對忠誠邊際遞減；ESQ > 75 後品質維持成本加速上升</p>
+                        <p>並非每個客群都願意為更高品質付費，外部服務品質對獲利的殘差效果為負（Hogreve et al., 2017）。員工留任也直接提升營收。最適配置在「中高」而非「全滿」。</p>
+                    </div>
+                    <div class="bg-white/95 p-4 rounded-xl border border-sky-50 shadow-sm">
+                        <h3 class="font-bold text-slate-700 text-sm mb-2">6. 回饋迴路與 AI</h3>
+                        <p class="font-mono bg-sky-50/50 border border-sky-100 p-2 rounded text-[10px] text-slate-700 mb-2">預算上限：虧損擴大 −5%、獲利 +5%；Q4 AI 導入</p>
+                        <p>績效差會減少對員工的投資，形成失敗循環；反之形成成功循環。第四季的 AI 導入事件對應 Hogreve et al.（2022）的「重新想像」：支援型 AI 與體驗型 AI，以及科技壓力、疏離等副作用。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 頁腳 -->
+        <footer class="border-t border-sky-100 bg-white py-4 text-center text-xs text-slate-400">
+            <p>© 2026 Grand Jodus 礁溪會館模擬教育系統｜文獻：Heskett et al. (1994)；Hogreve et al. (2017, 2022)｜v2.1 文獻修正版</p>
+        </footer>
+    </div>
+
+    <!-- 隨機/突發事件決策 Modal (自訂 UI) -->
+    <div id="event-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white border border-sky-200 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative overflow-hidden flex flex-col">
+            <!-- 裝飾標籤 -->
+            <div id="event-tag" class="self-start px-2.5 py-0.5 bg-sky-100 text-sky-700 border border-sky-200 rounded-md text-[10px] font-bold tracking-wider uppercase mb-3">
+                季度關鍵事件
+            </div>
+            <!-- 事件標題 -->
+            <h3 id="event-title" class="text-lg font-black text-slate-800 mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-amber-500"></i> 事件標題
+            </h3>
+            <!-- 事件描述 -->
+            <p id="event-description" class="text-xs text-slate-600 leading-relaxed bg-sky-50/80 p-3.5 rounded-xl border border-sky-100 mb-4">
+                事件詳細描述情境...
+            </p>
+            
+            <!-- 選項列表 -->
+            <div id="event-options" class="flex flex-col gap-2.5">
+                <!-- 動態注入選項按鈕 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 季度回報與結算 Modal -->
+    <div id="summary-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white border border-sky-200 rounded-2xl max-w-xl w-full p-6 shadow-2xl flex flex-col max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="bg-emerald-100 p-2.5 rounded-xl text-emerald-700 border border-emerald-200">
+                    <i class="fa-solid fa-chart-pie text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-black text-slate-800" id="summary-modal-title">第 1 季度營運結算回報</h3>
+                    <p class="text-xs text-slate-400">董事會營運分析與顧客反饋</p>
+                </div>
+            </div>
+            
+            <!-- 數據變化對比 -->
+            <div class="grid grid-cols-3 gap-3 bg-sky-50/80 p-4 rounded-xl border border-sky-100 text-center mb-4">
+                <div>
+                    <div class="text-[10px] text-slate-500 uppercase font-bold mb-1">本季損益</div>
+                    <div id="sum-profit" class="text-sm font-black text-slate-800">NT$ -120,000</div>
+                </div>
+                <div>
+                    <div class="text-[10px] text-slate-500 uppercase font-bold mb-1">員工流動率</div>
+                    <div id="sum-turnover" class="text-sm font-black text-slate-800">120%</div>
+                </div>
+                <div>
+                    <div class="text-[10px] text-slate-500 uppercase font-bold mb-1">顧客滿意度</div>
+                    <div id="sum-cs" class="text-sm font-black text-slate-800">55 / 100</div>
+                </div>
+            </div>
+
+            <!-- 情境總結評語 -->
+            <div class="mb-4">
+                <h4 class="text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1">
+                    <i class="fa-solid fa-comment-dots text-sky-600"></i> 董事會及市場反饋報告
+                </h4>
+                <p id="sum-feedback" class="text-xs text-slate-600 bg-sky-50/50 p-3 rounded-lg leading-relaxed border border-sky-100 shadow-inner">
+                    反饋內容...
+                </p>
+            </div>
+
+            <!-- 理論學習提示 -->
+            <div class="mb-5 p-3 bg-sky-50 border border-sky-100 rounded-lg">
+                <h4 class="text-xs font-bold text-sky-800 mb-1 flex items-center gap-1">
+                    <i class="fa-solid fa-lightbulb"></i> 服務利潤鏈學術點評：
+                </h4>
+                <p id="sum-theory" class="text-[11px] text-sky-900 leading-relaxed">
+                    理論點評說明...
+                </p>
+            </div>
+
+            <!-- 關閉按鈕 -->
+            <button onclick="closeSummaryModal()" class="w-full py-3 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-bold rounded-xl transition-all duration-150 shadow-md">
+                繼續推進策略決策
+            </button>
+        </div>
+    </div>
+
+    <!-- 終局報告 Modal -->
+    <div id="final-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white border border-sky-200 rounded-2xl max-w-5xl w-full p-6 shadow-2xl flex flex-col max-h-[90vh] overflow-y-auto relative">
+            
+            <div class="text-center mb-6">
+                <div class="inline-flex bg-sky-100 p-4 rounded-full text-sky-600 border border-sky-200 mb-3 text-3xl shadow-md">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h3 class="text-xl font-black text-sky-900 text-glow-gold">Grand Jodus 總經理卸任綜合報告</h3>
+                <p class="text-xs text-slate-400 mt-1">4 季度任期結束，董事會年度綜合考核結果</p>
+            </div>
+
+            <!-- 最終評級大印章 -->
+            <div class="absolute right-6 top-6 border-4 border-dashed rounded-full w-24 h-24 flex items-center justify-center transform rotate-12 select-none z-10" id="final-grade-stamp">
+                <span class="text-3xl font-black">A</span>
+            </div>
+
+            <!-- 財務與營運總榜單 -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-sky-50 p-3 rounded-xl border border-sky-100 text-center shadow-sm">
+                    <div class="text-[10px] text-slate-500 font-bold mb-1">年度累計損益</div>
+                    <div id="final-cum-profit" class="text-sm font-black">NT$ 20,000</div>
+                </div>
+                <div class="bg-sky-50 p-3 rounded-xl border border-sky-100 text-center shadow-sm">
+                    <div class="text-[10px] text-slate-500 font-bold mb-1">最終流動率</div>
+                    <div id="final-turnover" class="text-sm font-black">28.5%</div>
+                </div>
+                <div class="bg-sky-50 p-3 rounded-xl border border-sky-100 text-center shadow-sm">
+                    <div class="text-[10px] text-slate-500 font-bold mb-1">最終顧客滿意度</div>
+                    <div id="final-cs" class="text-sm font-black">88.5</div>
+                </div>
+                <div class="bg-sky-50 p-3 rounded-xl border border-sky-100 text-center shadow-sm">
+                    <div class="text-[10px] text-slate-500 font-bold mb-1">最終顧客回頭率</div>
+                    <div id="final-loyalty" class="text-sm font-black">78.3%</div>
+                </div>
+            </div>
+
+            <!-- 四季決策與數據覆盤對比表 -->
+            <div class="mb-6">
+                <h4 class="text-xs font-bold text-slate-700 mb-3 flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock-rotate-left text-emerald-600"></i> 四季策略軌跡與數據對比覆盤 (Historical Retrospective)
+                </h4>
+                <div class="overflow-x-auto rounded-xl border border-sky-100 bg-sky-50/50">
+                    <table class="w-full text-xs text-left text-slate-700 min-w-[900px]">
+                        <thead class="bg-sky-100/80 text-sky-900 uppercase font-semibold text-[10px] tracking-wider border-b border-sky-100">
+                            <tr>
+                                <th class="p-3 text-center">季度</th>
+                                <th class="p-3 text-center text-emerald-700">薪資福利 (C)</th>
+                                <th class="p-3 text-center text-sky-700">教育訓練 (T)</th>
+                                <th class="p-3 text-center text-amber-700">員工授權 (E)</th>
+                                <th class="p-3 text-center">員工滿意 / 流動</th>
+                                <th class="p-3 text-center">福祉 / 服務品質</th>
+                                <th class="p-3 text-center">顧客滿意 / 回頭</th>
+                                <th class="p-3 text-center">事件選擇</th>
+                                <th class="p-3 text-right">本季營收</th>
+                                <th class="p-3 text-right">本季總成本</th>
+                                <th class="p-3 text-right">本季損益</th>
+                            </tr>
+                        </thead>
+                        <tbody id="final-retrospective-rows">
+                            <!-- JS 動態注入 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 綜合評語 -->
+            <div class="mb-5">
+                <h4 class="text-xs font-bold text-slate-700 mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-scroll text-sky-600"></i> 董事會年度任免與評語
+                </h4>
+                <p id="final-evaluation-text" class="text-xs text-slate-600 bg-sky-50/50 p-4 rounded-xl leading-relaxed border border-sky-100">
+                    評語詳情...
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <button onclick="restartGame()" class="py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all duration-150 border border-slate-200">
+                    再挑戰一次
+                </button>
+                <button onclick="closeFinalModal()" class="py-3 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-bold rounded-xl transition-all duration-150 shadow-md">
+                    繼續瀏覽沙盤數據
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === 1. 遊戲狀態與初始參數 ===
+        let currentQuarter = 0; // 0代表初始破產狀態
+        let totalQuarters = 4;
+        
+        // 決策變數
+        let C = 20; // Compensation (薪資)
+        let T = 10; // Training (培訓)
+        let E = 10; // Empowerment (授權)
+        
+        // 歷史紀錄陣列，用於折線圖與四季覆盤對比
+        let history = [
+            {
+                q: 0,
+                C: 20, T: 10, E: 10,
+                ES: 34.0, WB: 38.0, SK: 10, P: 29, ESQ: 19,
+                EL: 43.8,
+                TR: 112.4,
+                CS: 42.1,
+                CL: 17.7,
+                revenue: 12405000,
+                cost: 14890000,
+                netProfit: -2485000,
+                cumProfit: -2485000,
+                cap: 9000000, choice: "—"
+            }
+        ];
+
+        // 季度特定事件的修飾值 (用於儲存事件影響)
+        let eventRevenueModifier = 0;
+        let eventCSModifier = 0;
+        let eventESModifier = 0;
+        let extraCostThisQuarter = 0;
+        let permanentCModifier = 1.0; // 挖角戰可能加薪
+        let eventWBModifier = 0;      // 福祉修飾
+        let eventCLModifier = 0;      // 顧客忠誠直接修飾（AI 疏離）
+        let eventLoadModifier = 0;    // 工作負荷修飾
+        let ownedLossMultiplier = 1;  // 員工帶走顧客的倍率（忠誠對象）
+        let eventSKModifier = 0;      // 技能存量修飾（證照培訓／骨幹流失）
+        let currentChoice = "—";
+        const BASE_BUDGET_CAP = 9000000;
+        let budgetCap = BASE_BUDGET_CAP;
+        let budgetCapBefore = BASE_BUDGET_CAP;
+
+        // 圖表物件
+        let financeChart = null;
+        let kpiChart = null;
+
+        // === 2. 啟動遊戲與首頁切換 ===
+        function startGame() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            
+            // 由於 Chart.js 在隱藏容器中大小可能計算錯誤，這裡在顯示時強制重新調整大小
+            setTimeout(() => {
+                if (financeChart && kpiChart) {
+                    financeChart.resize();
+                    kpiChart.resize();
+                }
+            }, 100);
+        }
+
+        // === 3. 初始化載入 ===
+        window.onload = function() {
+            updateSliders();
+            initCharts();
+            renderDashboard();
+        };
+
+        // === 4. 更新 Sliders 及預覽計算 ===
+        function updateSliders() {
+            C = parseInt(document.getElementById('slide-C').value);
+            T = parseInt(document.getElementById('slide-T').value);
+            E = parseInt(document.getElementById('slide-E').value);
+
+            // 更新數值顯示
+            document.getElementById('val-C').innerText = C + " / 100";
+            document.getElementById('val-T').innerText = T + " / 100";
+            document.getElementById('val-E').innerText = E + " / 100";
+
+            // 動態策略描述
+            updateDescription('C', C);
+            updateDescription('T', T);
+            updateDescription('E', E);
+
+            // 本季人資支出（與結算公式一致）與預算上限
+            let variableCost = Math.round(hrCost(C, T));
+            let costEl = document.getElementById('variable-cost-display');
+            costEl.innerText = "NT$ " + variableCost.toLocaleString();
+            document.getElementById('budget-cap-display').innerText = "NT$ " + Math.round(budgetCap).toLocaleString();
+            let over = variableCost > budgetCap && currentQuarter < totalQuarters;
+            costEl.className = over ? "text-rose-600 font-bold" : "text-sky-700 font-bold";
+            document.getElementById('budget-warning').classList.toggle('hidden', !over);
+            let btn = document.getElementById('btn-next-quarter');
+            if (btn) { btn.disabled = over; btn.classList.toggle('opacity-50', over); btn.classList.toggle('cursor-not-allowed', over); }
+        }
+
+        function updateDescription(type, val) {
+            let desc = "";
+            let element = document.getElementById('desc-' + type);
+            if (type === 'C') {
+                if (val < 35) {
+                    desc = "🛑 遠低於業界平均。一線員工入不敷出、怨氣沖天，將導致極高的流動率與怠工風險。";
+                    element.className = "text-[11px] text-rose-700 mt-2 bg-rose-50 p-1.5 rounded text-left leading-normal border-l-2 border-rose-500";
+                } else if (val < 65) {
+                    desc = "⚡ 達到市場行情。員工流動趨緩，配合培訓可達到基準的服務水準。";
+                    element.className = "text-[11px] text-slate-700 mt-2 bg-sky-50/50 p-1.5 rounded text-left leading-normal border-l-2 border-sky-400";
+                } else {
+                    desc = "🔥 跨國高福利標竿。提供全台頂尖福利，強力吸引市場一流人才，員工熱情與向心力極高。";
+                    element.className = "text-[11px] text-emerald-700 mt-2 bg-emerald-50 p-1.5 rounded text-left leading-normal border-l-2 border-emerald-500";
+                }
+            } else if (type === 'T') {
+                if (val < 30) {
+                    desc = "🛑 放任自流。員工連基本 SOP 都不熟悉，前線服務極易出錯，此時若給予授權將是場災難。";
+                    element.className = "text-[11px] text-rose-700 mt-2 bg-rose-50 p-1.5 rounded text-left leading-normal border-l-2 border-rose-500";
+                } else if (val < 60) {
+                    desc = "⚡ 基礎業務 SOP 培訓。前線員工可妥善解決標準客訴。注意：訓練有一半效果要到下一季才發酵（技能存量）。";
+                    element.className = "text-[11px] text-slate-700 mt-2 bg-sky-50/50 p-1.5 rounded text-left leading-normal border-l-2 border-sky-400";
+                } else {
+                    desc = "🔥 五星奢華精緻培訓與核心款待文化。技能存量逐季累積，是授權發揮正面效果的前提；但訓練效益同樣有邊際遞減。";
+                    element.className = "text-[11px] text-sky-700 mt-2 bg-sky-50 p-1.5 rounded text-left leading-normal border-l-2 border-sky-500";
+                }
+            } else if (type === 'E') {
+                if (val > 70) {
+                    desc = "⚠️ 授權超過 70：員工可能過度忠於顧客，出現私下優惠的「甜心交易（sweethearting）」，成本上升，顧客也更容易忠於個別員工而非飯店。";
+                    element.className = "text-[11px] text-amber-800 mt-2 bg-amber-50 p-1.5 rounded text-left leading-normal border-l-2 border-amber-600";
+                } else if (val < 30) {
+                    desc = "🛑 官僚主義僵化。第一線完全沒有授權，遇事必須層層上報，顧客等待時間過長必生怨氣。";
+                    element.className = "text-[11px] text-rose-700 mt-2 bg-rose-50 p-1.5 rounded text-left leading-normal border-l-2 border-rose-500";
+                } else if (val < 60) {
+                    desc = "⚡ 適度處置授權。員工可在規定額度內（如三千元以內）主動為不滿意的顧客免單或贈送精美禮品。";
+                    element.className = "text-[11px] text-slate-700 mt-2 bg-sky-50/50 p-1.5 rounded text-left leading-normal border-l-2 border-sky-400";
+                } else {
+                    desc = "🔥 高度即時授權。員工擁有處置資金創造感動服務的自由度，但必須有足夠的技能存量（≥ 40）才會產生正面效果。";
+                    element.className = "text-[11px] text-amber-700 mt-2 bg-amber-50 p-1.5 rounded text-left leading-normal border-l-2 border-amber-500";
+                }
+            }
+            element.innerText = desc;
+        }
+
+        // === 5. 服務利潤鏈核心計算引擎（v2：依 Heskett 1994；Hogreve 2017, 2022 修正）===
+        function satCurve(x, k) { return 100 * (1 - Math.exp(-x / k)); }
+        function clampV(v, a, b) { return Math.max(a, Math.min(b, v)); }
+        function hrCost(c, t) { return c * 80000 * permanentCModifier + t * 50000; }
+
+        function calculateQuarterResults(decC, decT, decE) {
+            let last = history[history.length - 1];
+            let lastTR = last.TR / 100;
+
+            // A. 技能存量：訓練有一半效果延到下一季（時間落差）
+            let SK = clampV(0.5 * last.SK + 0.5 * decT + eventSKModifier, 0, 100);
+            // 實質薪資：Q3 全面加薪 12% 後，同一滑桿值代表更高的實質待遇
+            let Ce = Math.min(100, decC * permanentCModifier);
+            let SKe = satCurve(SK, 45);
+
+            // B. 員工滿意：薪資與訓練邊際遞減＋顧客回饋員工（Shepherd et al., 2020，轉引）＋降薪懲罰
+            let rawES = 0.65 * satCurve(Ce, 30) + 0.35 * satCurve(decT, 50);
+            let payCutPenalty = decC < last.C ? (last.C - decC) * 1.8 : 0;
+            let feedbackES = 0.1 * (last.CS - 50);
+            let es = clampV(0.4 * last.ES + 0.6 * rawES + feedbackES + eventESModifier - payCutPenalty, 0, 100);
+
+            // C. 員工福祉：人力缺口造成的工作負荷（Hogreve et al., 2022 修正方向②）
+            let workload = clampV(25 + 50 * Math.min(lastTR, 1.5) / 1.5 + eventLoadModifier, 0, 100);
+            let rawWB = 0.5 * satCurve(Ce, 40) + 0.5 * (100 - workload);
+            let wb = clampV(0.4 * last.WB + 0.6 * rawWB + eventWBModifier, 0, 100);
+
+            // D. 員工留任與流動率
+            let el = clampV(0.08 + 0.42 * es / 100 + 0.25 * wb / 100 + 0.2 * satCurve(Ce, 40) / 100, 0.15, 0.95);
+            let tr = clampV((1 - el) * 2, 0.1, 2.0);
+
+            // E. 員工生產力：內部服務品質（技能）直接影響生產力（Hogreve et al., 2017）
+            let prod = 0.35 * es + 0.45 * SKe + 0.2 * wb;
+
+            // F. 外部服務品質：生產力＋技能＋授權（人資管理系統綜效）
+            let empEffect = decE * ((SK - 40) / 60) * 0.35;
+            let esq = clampV(0.55 * prod + 0.25 * SKe + empEffect, 0, 100);
+
+            // G. 顧客滿意：主要來自服務品質，滿意鏡像（員工滿意直接效果）較弱
+            let cs = clampV(0.6 * last.CS + 0.4 * (22 + 0.65 * esq + 0.08 * es + eventCSModifier), 10, 100);
+            if (decC < last.C) cs = Math.max(10, cs - (last.C - decC) * 0.5);
+
+            // H. 顧客忠誠：三區 S 型曲線（Heskett et al., 1994）＋生產力直接效果
+            //    − 內向懲罰（員工滿意未轉化為服務品質，Hogreve et al., 2017）− 員工離職帶走的顧客（忠誠對象）
+            let zone = 95 / (1 + Math.exp(-(cs - 52) / 10));
+            let inward = 0.35 * Math.max(0, es - esq - 8);
+            let owned = (0.2 + 0.3 * decE / 100) * Math.max(0, tr - 0.35) * 18 * ownedLossMultiplier;
+            let cl = clampV(zone + 0.08 * (prod - 35) - inward - owned + eventCLModifier, 3, 95);
+
+            // I. 營收：對忠誠邊際遞減（品質報酬）＋員工留任直接提升營收（Hogreve et al., 2017）
+            let revenue = 6600000 + 17500000 * (1 - Math.exp(-cl / 32)) + 4000000 * (el - 0.45) + eventRevenueModifier;
+            revenue = Math.max(6000000, revenue);
+
+            // J. 成本
+            let fixed_cost = 9390000;
+            let salary_cost = decC * 80000 * permanentCModifier;
+            let training_cost = decT * 50000;
+            let empowerment_loss = (SK < 40 && decE > 20) ? decE * 40000 : decE * 3000 + Math.max(0, decE - 70) * 35000;
+            let recruitment_cost = tr * 50 * 70000;
+            let quality_cost = 25000 * Math.pow(Math.max(0, esq - 75), 1.5); // 品質維持成本：外部服務品質對獲利的負向殘差
+            let total_cost = fixed_cost + salary_cost + training_cost + empowerment_loss + recruitment_cost + quality_cost + extraCostThisQuarter;
+            let net_profit = revenue - total_cost;
+            let cum_profit = last.cumProfit + net_profit;
+
+            // K. 回饋迴路：董事會調整下一季預算上限
+            let nextCap = budgetCap * (net_profit >= 0 ? 1.05 : (net_profit < last.netProfit ? 0.95 : 1.0));
+
+            return {
+                q: currentQuarter,
+                C: decC, T: decT, E: decE,
+                ES: es, WB: wb, SK: SK, P: prod, ESQ: esq,
+                EL: el * 100,
+                TR: tr * 100,
+                CS: cs,
+                CL: cl,
+                revenue: revenue,
+                cost: total_cost,
+                netProfit: net_profit,
+                cumProfit: cum_profit,
+                inward: inward, owned: owned, qualityCost: quality_cost,
+                empLoss: empowerment_loss, sweet: decE > 70 && SK >= 40, blind: SK < 40 && decE > 20,
+                payCut: decC < last.C,
+                cap: nextCap, choice: currentChoice
+            };
+        }
+
+        // 輔助函數：若降薪則扣減顧客滿意度上限
+        function minCSScore(cs, currentC, lastC) {
+            if (currentC < lastC) {
+                return Math.max(10, cs - (lastC - currentC) * 0.5);
+            }
+            return cs;
+        }
+
+        // === 6. 決策推進與事件觸發器 ===
+        function triggerQuarterEvent() {
+            if (hrCost(C, T) > budgetCap) { updateSliders(); return; }
+            currentQuarter++;
+            
+            // 重置臨時事件修飾符
+            eventRevenueModifier = 0;
+            eventCSModifier = 0;
+            eventESModifier = 0;
+            extraCostThisQuarter = 0;
+            eventWBModifier = 0;
+            eventCLModifier = 0;
+            eventLoadModifier = 0;
+            ownedLossMultiplier = 1;
+            eventSKModifier = 0;
+            currentChoice = "—";
+
+            if (currentQuarter === 1) {
+                showQ1Event();
+            } else if (currentQuarter === 2) {
+                showQ2Event();
+            } else if (currentQuarter === 3) {
+                showQ3Event();
+            } else if (currentQuarter === 4) {
+                showQ4Event();
+            }
+        }
+
+        function executeQuarterTransition() {
+            let results = calculateQuarterResults(C, T, E);
+            history.push(results);
+            budgetCapBefore = budgetCap;
+            budgetCap = results.cap;
+            updateSliders();
+            
+            // 渲染看板與圖表
+            renderDashboard();
+            updateCharts();
+
+            // 彈出營運回報結算 Modal
+            showSummaryModal(results);
+
+            // 修改推進按鈕文字
+            let btnText = document.getElementById('next-btn-text');
+            if (currentQuarter < totalQuarters) {
+                btnText.innerText = `提交策略，進入第 ${currentQuarter + 1} 季度`;
+            } else {
+                btnText.innerText = "模擬結束，查看總經理成績單";
+                document.getElementById('btn-next-quarter').onclick = showFinalReport;
+            }
+        }
+
+        // === 7. 事件設定與 Modal 渲染 ===
+        function showEventModal(title, desc, options) {
+            document.getElementById('event-title').innerHTML = title;
+            document.getElementById('event-description').innerHTML = desc;
+            
+            let container = document.getElementById('event-options');
+            container.innerHTML = "";
+
+            options.forEach(opt => {
+                let btn = document.createElement('button');
+                btn.className = "w-full text-left p-3.5 rounded-xl border border-sky-100 bg-white hover:bg-sky-50 hover:border-sky-300 text-slate-700 transition duration-150 text-xs flex justify-between items-center group shadow-sm";
+                
+                if (opt.locked) {
+                    btn.className = "w-full text-left p-3.5 rounded-xl border border-sky-100 bg-slate-50 text-slate-400 cursor-not-allowed text-xs flex justify-between items-center";
+                    btn.disabled = true;
+                    btn.innerHTML = `<div><span class="text-rose-500 font-bold mr-1.5">[🔒 已鎖定]</span> ${opt.text} <p class="text-[10px] text-slate-400 mt-1">${opt.lockMsg}</p></div>`;
+                } else {
+                    btn.onclick = () => {
+                        currentChoice = opt.label;
+                        opt.action();
+                        document.getElementById('event-modal').classList.add('hidden');
+                        executeQuarterTransition();
+                    };
+                    btn.innerHTML = `<div><span class="text-sky-600 font-bold group-hover:text-sky-500 mr-1.5">${opt.label}</span> ${opt.text}</div> <i class="fa-solid fa-chevron-right text-slate-400 group-hover:translate-x-1 transition-transform"></i>`;
+                }
+                container.appendChild(btn);
+            });
+
+            document.getElementById('event-modal').classList.remove('hidden');
+        }
+
+        // Q1 Event: VVIP 紅酒污漬危機
+        function showQ1Event() {
+            let skillNow = 0.5 * history[history.length - 1].SK + 0.5 * T;
+            let isLocked = (E < 50 || skillNow < 40);
+            let lockMsg = `（需要前線授權 ≥ 50 且技能存量 ≥ 40；目前技能存量約 ${Math.round(skillNow)}。技能存量未達 40 時授權反而會被濫用。訓練有一半效果要到下一季才發酵，第一季訓練需達 70 以上才來得及。）`;
+            
+            showEventModal(
+                `<i class="fa-solid fa-wine-glass-empty text-rose-500 mr-2"></i>【關鍵時刻 MOT】VVIP 紅酒污漬危機`,
+                `<b>情境：</b> 一位手握大量礁溪頂級商務招待會議訂單的高價值顧客（VVIP），在 Grand Jodus 美人湯會館宴會廳用餐時，服務生不慎將高級紅酒灑在她的名牌洋裝上。因為是週五晚上，總經理您不在現場。<br><br><b>現在，這名員工該如何應對？這直接反映出您目前的培訓與授權策略：</b>`,
+                [
+                    {
+                        label: "方案 A",
+                        text: "【傳奇服務補救】員工主動使用客訴備用金，先將洋裝送24H特快乾洗、派專車去台北新光三越專櫃購買同款備用洋裝，並在房內手寫礁溪溫泉特產致歉禮盒與卡片。",
+                        locked: isLocked,
+                        lockMsg: lockMsg,
+                        action: () => {
+                            eventCSModifier = 18;
+                            eventRevenueModifier = 800000; // 口碑與高端客回流
+                            extraCostThisQuarter = 100000; // 專櫃洋裝、特快乾洗費用
+                        }
+                    },
+                    {
+                        label: "方案 B",
+                        text: "【即時免單補償】領班出面，將該桌餐飲與溫泉招待費用免單（約 NT$ 36,000 元），並口頭保證由法務審核後進行適當賠償（約需 7 個工作天）。",
+                        locked: false,
+                        action: () => {
+                            eventCSModifier = 4;
+                            extraCostThisQuarter = 36000; 
+                        }
+                    },
+                    {
+                        label: "方案 C",
+                        text: "【依規定流程處理】依公司規定，請顧客填寫事故單，週一由總部保險理賠窗口統一處理；現場人員不做額外補償，以避免開立先例。",
+                        locked: false,
+                        action: () => {
+                            eventCSModifier = -15;
+                            eventRevenueModifier = -600000; 
+                            eventESModifier = -10; 
+                        }
+                    }
+                ]
+            );
+        }
+
+        // Q2 Event: 員工集體過勞與流失警訊
+        function showQ2Event() {
+            let lastTR = history[history.length - 1].TR;
+            let q2Context = lastTR >= 70
+                ? `由於流動率仍高達 ${Math.round(lastTR)}%，Grand Jodus 礁溪旗艦店的前線人力缺額高達 30%。現有的忠誠員工因為頻繁加班、承擔雙倍工作，士氣跌入谷底，私下醞釀在下週末礁溪特大溫泉美食祭活動中「集體請病假怠工」。`
+                : `雖然流動率已降到 ${Math.round(lastTR)}%，但溫泉旺季訂房暴增，新進人員仍在訓練期，前線人力依舊吃緊。資深員工連續加班、承擔雙倍工作，開始出現倦怠與「集體請病假」的耳語，時間點正好是下週末的礁溪特大溫泉美食祭。`;
+            showEventModal(
+                `<i class="fa-solid fa-users-viewfinder text-sky-600 mr-2"></i>【HR 內部危機】礁溪會館爆發嚴重過勞潮`,
+                `<b>情境：</b> ${q2Context}<br><br><b>作為總經理，你必須立刻平息內部風暴：</b>`,
+                [
+                    {
+                        label: "方案 A",
+                        text: "【短期加班費加倍與福利補貼】宣布週末特大溫泉季活動加班費提高為 2.5 倍，並在員工餐廳提供礁溪在地高檔私廚外送。同時承諾本月釋放招聘名額。",
+                        locked: false,
+                        action: () => {
+                            eventESModifier = 10;
+                            extraCostThisQuarter = 500000; // 額外加班與補貼支出
+                        }
+                    },
+                    {
+                        label: "方案 B",
+                        text: "【降低營運負荷】暫時關閉 15% 的客房（暫不接散客），並降低餐飲與溫泉部翻桌與入池人次，藉此直接調低一線人員的工作強度，專注服務品質。",
+                        locked: false,
+                        action: () => {
+                            eventESModifier = 6;
+                            eventWBModifier = 15;    // 福祉明顯改善（Hogreve 修正方向②）
+                            eventLoadModifier = -20;
+                            eventCSModifier = 5;
+                            eventRevenueModifier = -1800000; // 關閉 15% 客房與降低翻桌、入池人次的營收損失
+                        }
+                    },
+                    {
+                        label: "方案 C",
+                        text: "【精神動員與企業文化宣導】召開全員大會，宣導「顧客至上、共渡難關」的礁溪溫泉服務精神，強調年底若達標將發放績效獎金（但不做當期財務補貼）。",
+                        locked: false,
+                        action: () => {
+                            eventESModifier = -12;
+                            eventWBModifier = -10;
+                            eventCSModifier = -5; 
+                        }
+                    }
+                ]
+            );
+        }
+
+        // Q3 Event: 競爭對手高薪挖角戰
+        function showQ3Event() {
+            let skNow = history[history.length - 1].SK;
+            let q3Target = skNow >= 40
+                ? `點名挖角你們剛培訓完成、已能獨當一面的一線骨幹與溫泉主管`
+                : `點名挖角少數仍留在館內、熟悉在地熟客的資深員工與溫泉主管`;
+            showEventModal(
+                `<i class="fa-solid fa-handshake-simple text-sky-600 mr-2"></i>【礁溪人才保衛戰】競爭對手惡意挖角`,
+                `<b>情境：</b> 礁溪新開了一家大型日式奢華溫泉酒店，在該酒店開幕前夕，其人力資源總監正以高出市場均值 20% 的高薪、加上優厚年終，${q3Target}。<br><br><b>您的黃金前線團隊面臨被集體瓦解的危險：</b>`,
+                [
+                    {
+                        label: "方案 A",
+                        text: "【全面跟進調薪與卓越留任計畫】宣布全體一線員工立刻永久加薪 12%，並提供為期一年的「卓越留任獎金」NT$ 45,000 元/人（分四季發放）。",
+                        locked: false,
+                        action: () => {
+                            permanentCModifier = 1.12;     // 永久加薪 12%：實質薪資與薪資成本同步提高
+                            extraCostThisQuarter = 562500; // 留任獎金 45,000 × 50 人 ÷ 4 季
+                            eventESModifier = 15; 
+                        }
+                    },
+                    {
+                        label: "方案 B",
+                        text: "【強化職涯升遷與國際認證培訓】為有意留下的員工規劃「快速升遷店長通道」，並引進最頂尖的款待培訓與考照，提供外部溫泉管理證照全額贊助。",
+                        locked: false,
+                        action: () => {
+                            eventESModifier = 8;
+                            ownedLossMultiplier = 0.5; // 留住骨幹，熟客較不會跟著走
+                            eventSKModifier = 5;       // 證照與款待培訓提升技能存量
+                            extraCostThisQuarter = 350000; 
+                        }
+                    },
+                    {
+                        label: "方案 C",
+                        text: "【不予跟進，相信愛護企業者自留】認為基層流失可以隨時上網招聘新人，拒絕調整任何薪資結構或提供福利補償。",
+                        locked: false,
+                        action: () => {
+                            eventESModifier = -15;
+                            eventCSModifier = -12;
+                            ownedLossMultiplier = 2.5; // 骨幹離職，忠於員工的熟客跟著流失
+                            eventSKModifier = -10;     // 骨幹帶走技能
+                        }
+                    }
+                ]
+            );
+        }
+
+        // Q4 Event: AI 導入決策（Hogreve et al., 2022 重新想像）
+        function showQ4Event() {
+            showEventModal(
+                `<i class="fa-solid fa-robot text-sky-600 mr-2"></i>【數位轉型】集團要求礁溪會館導入 AI`,
+                `<b>情境：</b> 集團總部引進一套 AI 服務系統（自助入住機器人、LINE 智慧客服、AI 排班與話術建議），要求各館本季決定導入方式。財務長提醒：若全面以 AI 取代部分前線人力，本季可立即省下可觀人事成本。<br><br><b>您的決定是：</b>`,
+                [
+                    {
+                        label: "方案 A",
+                        text: "【全面取代】以自助入住機器人與智慧客服取代約三成櫃台與客服人力，所有詢問先由 AI 處理，不保留真人轉接。",
+                        locked: false,
+                        action: () => {
+                            extraCostThisQuarter = -1500000; // 人力成本節省
+                            eventESModifier = -15;  // 工作不安全感（AI 覺察）
+                            eventWBModifier = -8;   // 科技惡性壓力
+                            eventCSModifier = -6;   // 顧客科技壓力
+                            eventCLModifier = -8;   // 疏離：企業與顧客的連結變弱
+                            ownedLossMultiplier = 1.5;
+                        }
+                    },
+                    {
+                        label: "方案 B",
+                        text: "【AI 支援員工】AI 負責排班、資料查詢與話術建議，由前線員工參與設計流程；顧客隨時可轉接真人服務。",
+                        locked: false,
+                        action: () => {
+                            extraCostThisQuarter = 400000; // 導入與共同設計成本
+                            eventESModifier = 5;   // 良性壓力、能力感
+                            eventCSModifier = 5;   // 服務更快、仍有真人
+                        }
+                    },
+                    {
+                        label: "方案 C",
+                        text: "【暫不導入】維持現有人力服務模式，待其他分館試行後再評估。",
+                        locked: false,
+                        action: () => { }
+                    }
+                ]
+            );
+        }
+
+        // === 8. 季度報告及綜合反饋 ===
+        function showSummaryModal(results) {
+            document.getElementById('summary-modal-title').innerText = `第 ${currentQuarter} 季度營運結算回報`;
+
+            let profitEl = document.getElementById('sum-profit');
+            profitEl.innerText = (results.netProfit >= 0 ? "+" : "") + Math.round(results.netProfit).toLocaleString() + " 元";
+            profitEl.className = results.netProfit >= 0 ? "text-sm font-black text-emerald-600" : "text-sm font-black text-rose-600";
+
+            let turnoverEl = document.getElementById('sum-turnover');
+            turnoverEl.innerText = Math.round(results.TR) + "%";
+            turnoverEl.className = results.TR < 50 ? "text-sm font-black text-emerald-600" : "text-sm font-black text-rose-600";
+
+            let csEl = document.getElementById('sum-cs');
+            csEl.innerText = Math.round(results.CS) + " / 100";
+            csEl.className = results.CS >= 70 ? "text-sm font-black text-emerald-600" : (results.CS >= 50 ? "text-sm font-black text-amber-600" : "text-sm font-black text-rose-600");
+
+            let prev = history[history.length - 2];
+            let feedback = "";
+            let theory = "";
+
+            // --- 情境回報 ---
+            if (results.payCut) {
+                feedback = `<span class="text-rose-600 font-bold block mb-1">🚨 警報：員工對降薪發起強烈抗議！</span>您在本季把薪資從 ${prev.C} 降到 ${results.C}。資深領班私下串聯準備離職，一線同仁出現「無聲罷工」，顧客抱怨服務冷淡推諉。省下的薪資，很快被流動率反彈帶來的招募成本與口碑損失吃掉。`;
+            } else if (currentQuarter === 1) {
+                feedback = results.choice === "方案 A"
+                    ? (results.netProfit >= 0
+                        ? `紅酒危機被前線員工漂亮化解，VVIP 在社群上主動稱讚，宴會與商務訂單回流。前期累積的訓練讓授權發揮效果，本季已轉為獲利。`
+                        : `紅酒危機被前線員工漂亮化解，VVIP 在社群上主動稱讚，宴會與商務訂單回流。不過薪資與訓練投入仍讓本季財報承受壓力。`)
+                    : (results.choice === "方案 C"
+                        ? `顧客在現場等了 30 分鐘，得知要等週一才處理後暴怒離店，並在網路留下一星負評，引發蘭陽旅遊社群的公關危機。散客退房，被指責的前線同仁士氣更低。`
+                        : `領班以免單暫時安撫顧客，但後續賠償要等法務審核，顧客觀感普通，口碑沒有加分。`);
+            } else if (currentQuarter === 2) {
+                feedback = results.choice === "方案 B"
+                    ? `暫時減少接客量後，前線終於喘口氣，福祉明顯回升，服務也更從容；代價是本季營收減少約 180 萬。`
+                    : (results.choice === "方案 A"
+                        ? `加班費與餐補暫時穩住軍心，活動順利撐過，本季營收沒有受影響；但人力缺口與工作負荷仍在，福祉改善有限。`
+                        : `「共體時艱」被員工解讀為畫大餅，資深主管帶隊離職，派遣工補位讓週末大排長龍。`);
+            } else if (currentQuarter === 3) {
+                feedback = results.choice === "方案 C"
+                    ? `骨幹員工被大量挖走，帶走了累積的服務技能；許多熟客是「衝著某位管家」而來，也跟著員工流向對手。`
+                    : (results.choice === "方案 B"
+                        ? `升遷通道與證照補助留住了多數骨幹，熟客關係得以延續，證照培訓也進一步提升了團隊技能。`
+                        : `全面加薪留住了人，實質待遇提高也讓之後各季更容易留任；但薪資成本從此永久墊高 12%。<b>提醒：第四季同樣的薪資滑桿，人資支出會高出 12%，請確認仍在預算上限內。</b>`);
+            } else if (currentQuarter === 4) {
+                feedback = results.choice === "方案 A"
+                    ? `AI 全面上線，本季人事成本立即下降。但員工擔心被取代、士氣下滑；顧客找不到真人，抱怨「飯店變冷了」，部分熟客不再回訪。`
+                    : (results.choice === "方案 B"
+                        ? `AI 幫員工處理排班與查詢，前線有更多時間照顧客人；顧客隨時能找到真人，評價穩定上升。`
+                        : `您選擇暫緩導入。服務模式維持不變，本季沒有額外的導入成本，也沒有 AI 帶來的效率或風險。`);
+            }
+
+            // --- 本季模型訊號（連結文獻） ---
+            let signals = [];
+            if (results.blind) signals.push(`🔒 <b>盲目授權：</b>技能存量只有 ${Math.round(results.SK)}，授權反而造成公款濫用與顧客反感（授權須搭配訓練，Hogreve et al., 2022 修正方向①）。`);
+            if (results.sweet) signals.push(`🍬 <b>甜心交易：</b>授權超過 70，員工開始私下給熟客優惠，成本上升，顧客也更忠於個人而非飯店（修正方向③）。`);
+            if (results.inward > 2) signals.push(`🪞 <b>組織內向：</b>員工滿意（${Math.round(results.ES)}）明顯高於外部服務品質（${Math.round(results.ESQ)}），滿意沒有轉化為對顧客的服務，顧客忠誠反而受損（Hogreve et al., 2017）。`);
+            if (results.owned > 3) signals.push(`🚪 <b>員工帶走顧客：</b>流動率偏高，忠於個別員工的熟客隨之流失（修正方向③）。`);
+            if (results.qualityCost > 300000) signals.push(`💸 <b>品質報酬遞減：</b>外部服務品質已達 ${Math.round(results.ESQ)}，本季品質維持成本約 NT$ ${Math.round(results.qualityCost).toLocaleString()}，不是每位顧客都願意為更高品質付費（Hogreve et al., 2017）。`);
+            if (results.WB < 40) signals.push(`🥵 <b>福祉偏低：</b>人力缺口讓工作負荷居高不下，即使滿意度回升，留任與生產力仍受拖累（修正方向②）。`);
+            if (currentQuarter < totalQuarters && results.cap < budgetCapBefore) signals.push(`📉 <b>預算縮減：</b>虧損擴大，董事會把下季人資預算上限降為 NT$ ${Math.round(results.cap).toLocaleString()}（失敗循環）。`);
+            if (currentQuarter < totalQuarters && results.cap > budgetCapBefore) signals.push(`📈 <b>預算放寬：</b>本季獲利，董事會把下季人資預算上限提高為 NT$ ${Math.round(results.cap).toLocaleString()}（成功循環）。`);
+            if (signals.length) feedback += `<span class="block mt-2 pt-2 border-t border-sky-100 font-bold text-sky-800">本季模型訊號</span>` + signals.map(s => `<span class="block mt-1">${s}</span>`).join("");
+
+            // --- 學術點評 ---
+            if (results.payCut) {
+                theory = `<b>不對稱效果與損失規避：</b>壞事的影響大於等量的好事。Hogreve et al.（2022）整理的研究指出，員工生產力下降對顧客滿意的傷害，大於同幅度上升的幫助；降薪更會觸發損失規避，引發報復性的品質下滑。`;
+            } else if (currentQuarter === 1) {
+                theory = `<b>時間落差：</b>訓練只有一半效果在當季出現，員工與顧客滿意也都帶有上一季的慣性。Heskett et al.（1994）把鏈上各環節稱為「命題」，而 Hogreve et al.（2022）指出 SPC 研究多為橫斷面資料，難以看見這種落差，因此呼籲做縱貫研究。`;
+            } else if (currentQuarter === 2) {
+                theory = `<b>從滿意到福祉：</b>滿意是當下的評價；福祉還包括壓力是否不存在、工作是否有意義。Hogreve et al.（2022）建議把福祉納入 SPC，當作滿意之外的另一條路徑。本季的過勞潮正是「滿意度也許還在，福祉卻在流失」的情境。`;
+            } else if (currentQuarter === 3) {
+                theory = `<b>忠誠對象：</b>顧客可能忠於飯店，也可能忠於某位員工。員工擁有的顧客忠誠對績效較有利，但員工一離職，顧客可能跟著走（Hogreve et al., 2022，轉引 Palmatier et al., 2007）。原典也提醒：最適的員工留任率很少是 100%，要算進流失關鍵員工的全部成本（Heskett et al., 1994）。`;
+            } else {
+                theory = `<b>重新想像 SPC：</b>Hogreve et al.（2022）提出支援型 AI（支援員工，屬於內部服務品質）與體驗型 AI（改變顧客接觸點）。自助科技研究提醒：顧客留下來可能是因為轉換成本而非滿意；全面取代真人可能帶來科技壓力與「疏離」，保留真人協助選項可緩和副作用。`;
+            }
+
+            document.getElementById('sum-feedback').innerHTML = feedback;
+            document.getElementById('sum-theory').innerHTML = theory;
+
+            document.getElementById('summary-modal').classList.remove('hidden');
+        }
+
+        function closeSummaryModal() {
+            document.getElementById('summary-modal').classList.add('hidden');
+            if (currentQuarter === totalQuarters) {
+                showFinalReport();
+            }
+        }
+
+        // === 9. 終局報告與評級 ===
+        function showFinalReport() {
+            let last = history[history.length - 1];
+            
+            // 計算累計淨利
+            let totalProfit = last.cumProfit;
+            let finalTR = last.TR;
+            let finalCS = last.CS;
+            let finalCL = last.CL;
+
+            // 評判等級
+            let grade = "F";
+            let evalText = "";
+            let stampColor = "border-rose-500 text-rose-500";
+
+            if (totalProfit > 3000000 && finalTR < 45 && finalCS > 78) {
+                grade = "S";
+                stampColor = "border-emerald-600 text-emerald-600";
+                evalText = `🏆 <b>【傳奇總經理（S 級）】</b><br>您在有限預算下找到了「最適」而非「最大」的配置：薪資到位、訓練持續累積技能，再讓授權在技能基礎上發揮綜效。員工的滿意轉化成了對顧客的服務品質，顧客忠誠與員工留任同時改善，Grand Jodus 進入<b>成功循環</b>。累計損益 NT$ ${Math.round(totalProfit).toLocaleString()}、流動率 ${Math.round(finalTR)}%、顧客滿意 ${Math.round(finalCS)}。`;
+            } else if (totalProfit > -3000000 && finalCS > 70 && finalTR < 60) {
+                grade = "A";
+                stampColor = "border-sky-600 text-sky-600";
+                evalText = `🌟 <b>【卓越經理人（A 級）】</b><br>您頂住前期的財務壓力，讓服務品質與留任明顯翻轉。距離 S 級還差一步：檢查覆盤表，看看是訓練累積不夠（技能存量決定授權成效），還是某一季的事件選擇（例如 Q2 的福祉、Q3 的忠誠對象、Q4 的 AI 導入）拖累了最終指標。`;
+            } else if (finalCS >= 55 && finalTR < 90) {
+                grade = "B";
+                stampColor = "border-slate-500 text-slate-500";
+                evalText = `💼 <b>【平庸守成者（B 級）】</b><br>Grand Jodus 止住了失血，但顧客滿意（${Math.round(finalCS)}）或員工流動率（${Math.round(finalTR)}%）仍未達到董事會期待。`;
+                if (totalProfit > 8000000) {
+                    evalText += `<br><br>💡 <b>值得討論：</b>您的累計獲利相當高（NT$ ${Math.round(totalProfit).toLocaleString()}），卻沒有拿到更高評級。四季任期內壓低薪資可能讓利潤最大，但流動率與顧客滿意沒有改善，代表成功循環並未啟動。<b>利潤最大化不等於服務利潤鏈的成功</b>：員工留任本身就會影響營收與顧客關係（Hogreve et al., 2017）。`;
+                } else {
+                    evalText += `常見原因包括：只加薪不訓練（員工滿意卻未轉化為服務品質，出現組織內向）、訓練累積太晚，或高授權卻缺乏技能基礎。`;
+                }
+            } else {
+                grade = "F";
+                stampColor = "border-rose-600 text-rose-600";
+                evalText = `🚨 <b>【失敗循環的泥潭（F 級）】</b><br>Grand Jodus 在您的任期內未能擺脫<b>失敗循環</b>。高達 ${Math.round(finalTR)}% 的流動率帶來大量招募成本與人力缺口，福祉與服務品質持續下滑，熟客跟著員工流失；虧損又讓董事會縮減人資預算，使下一季更難投資。這正是 Heskett et al.（1994）描述的循環：甄選不當、訓練不足、薪資偏低、高離職，周而復始。`;
+            }
+            // 動態生成四季策略軌跡與數據對比 rows
+            let tableRowsHtml = "";
+            history.forEach((h, idx) => {
+                let qText = idx === 0 ? "Q0 (基準)" : `第 ${idx} 季度`;
+                let profitClass = h.netProfit >= 0 ? "text-emerald-700 font-bold" : "text-rose-600 font-bold";
+                let profitSign = h.netProfit >= 0 ? "+" : "";
+                
+                tableRowsHtml += `
+                    <tr class="border-b border-sky-100 hover:bg-sky-50/50 transition">
+                        <td class="p-3 text-center font-bold text-sky-900">${qText}</td>
+                        <td class="p-3 text-center text-emerald-700 font-semibold">${h.C}</td>
+                        <td class="p-3 text-center text-sky-700 font-semibold">${h.T}</td>
+                        <td class="p-3 text-center text-amber-700 font-semibold">${h.E}</td>
+                        <td class="p-3 text-center">
+                            <div class="font-medium">${Math.round(h.ES)}分</div>
+                            <div class="text-[10px] text-slate-400">流動: ${Math.round(h.TR)}%</div>
+                        </td>
+                        <td class="p-3 text-center">
+                            <div class="font-medium">福祉 ${Math.round(h.WB)}</div>
+                            <div class="text-[10px] text-slate-400">服務品質: ${Math.round(h.ESQ)}</div>
+                        </td>
+                        <td class="p-3 text-center">
+                            <div class="font-medium">${Math.round(h.CS)}分</div>
+                            <div class="text-[10px] text-slate-400">回頭: ${Math.round(h.CL)}%</div>
+                        </td>
+                        <td class="p-3 text-center text-[10px]">${h.choice || "—"}</td>
+                        <td class="p-3 text-right font-medium text-slate-700">NT$ ${Math.round(h.revenue).toLocaleString()}</td>
+                        <td class="p-3 text-right text-slate-400">NT$ ${Math.round(h.cost).toLocaleString()}</td>
+                        <td class="p-3 text-right ${profitClass}">${profitSign}NT$ ${Math.round(h.netProfit).toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+            document.getElementById('final-retrospective-rows').innerHTML = tableRowsHtml;
+
+            // 更新 Modal UI
+            let stamp = document.getElementById('final-grade-stamp');
+            stamp.className = `absolute right-6 top-6 border-4 border-dashed rounded-full w-24 h-24 flex items-center justify-center transform rotate-12 select-none ${stampColor}`;
+            stamp.innerHTML = `<span class="text-4xl font-black">${grade}</span>`;
+
+            document.getElementById('final-cum-profit').innerText = (totalProfit >= 0 ? "+" : "") + "NT$ " + Math.round(totalProfit).toLocaleString();
+            document.getElementById('final-cum-profit').className = totalProfit >= 0 ? "text-sm font-black text-emerald-700" : "text-sm font-black text-rose-600";
+
+            document.getElementById('final-turnover').innerText = Math.round(finalTR) + "%";
+            document.getElementById('final-turnover').className = finalTR < 50 ? "text-sm font-black text-emerald-700" : "text-sm font-black text-rose-600";
+
+            document.getElementById('final-cs').innerText = Math.round(finalCS) + " / 100";
+            document.getElementById('final-cs').className = finalCS >= 70 ? "text-sm font-black text-emerald-700" : "text-sm font-black text-rose-600";
+
+            document.getElementById('final-loyalty').innerText = Math.round(finalCL) + "%";
+            document.getElementById('final-loyalty').className = finalCL >= 50 ? "text-sm font-black text-emerald-700" : "text-sm font-black text-rose-600";
+
+            document.getElementById('final-evaluation-text').innerHTML = evalText;
+
+            document.getElementById('final-modal').classList.remove('hidden');
+        }
+
+        function closeFinalModal() {
+            document.getElementById('final-modal').classList.add('hidden');
+        }
+
+        // === 10. 重新開始遊戲 (回到首頁以利重溫任務) ===
+        function restartGame() {
+            currentQuarter = 0;
+            C = 20;
+            T = 10;
+            E = 10;
+
+            document.getElementById('slide-C').value = C;
+            document.getElementById('slide-T').value = T;
+            document.getElementById('slide-E').value = E;
+
+            history = [
+                {
+                    q: 0,
+                    C: 20, T: 10, E: 10,
+                    ES: 34.0, WB: 38.0, SK: 10, P: 29, ESQ: 19,
+                    EL: 43.8,
+                    TR: 112.4,
+                    CS: 42.1,
+                    CL: 17.7,
+                    revenue: 12405000,
+                    cost: 14890000,
+                    netProfit: -2485000,
+                    cumProfit: -2485000,
+                    cap: 9000000, choice: "—"
+                }
+            ];
+
+            eventRevenueModifier = 0;
+            eventCSModifier = 0;
+            eventESModifier = 0;
+            extraCostThisQuarter = 0;
+            permanentCModifier = 1.0;
+            eventWBModifier = 0;
+            eventCLModifier = 0;
+            eventLoadModifier = 0;
+            ownedLossMultiplier = 1;
+            eventSKModifier = 0;
+            currentChoice = "—";
+            budgetCap = BASE_BUDGET_CAP;
+            budgetCapBefore = BASE_BUDGET_CAP;
+
+            // 恢復提交按鈕
+            let btn = document.getElementById('btn-next-quarter');
+            btn.onclick = triggerQuarterEvent;
+            document.getElementById('next-btn-text').innerText = "提交策略，進入第 1 季度";
+
+            // 關閉所有 Modals 
+            document.getElementById('event-modal').classList.add('hidden');
+            document.getElementById('summary-modal').classList.add('hidden');
+            document.getElementById('final-modal').classList.add('hidden');
+
+            // 回到首頁引導畫面
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('welcome-screen').classList.remove('hidden');
+
+            updateSliders();
+            renderDashboard();
+            updateCharts();
+        }
+
+        // === 11. 前端看板渲染更新 ===
+        function renderDashboard() {
+            let last = history[history.length - 1];
+
+            // 1. 頂部季度 Tag
+            let tag = document.getElementById('quarter-tag');
+            if (currentQuarter === 0) {
+                tag.innerText = "第 0 季度（瀕臨倒閉）";
+                tag.className = "px-3 py-1 bg-rose-100 text-rose-700 border border-rose-200 rounded-full text-xs font-semibold uppercase tracking-wider animate-pulse";
+            } else {
+                tag.innerText = `第 ${currentQuarter} 季度（策略重整中）`;
+                tag.className = "px-3 py-1 bg-sky-100 text-sky-700 border border-sky-200 rounded-full text-xs font-semibold uppercase tracking-wider";
+            }
+
+            // 2. 更新四大指標
+            // A. 本季淨損益
+            let kpiProfit = document.getElementById('kpi-profit');
+            kpiProfit.innerText = "NT$ " + Math.round(last.netProfit).toLocaleString();
+            kpiProfit.className = last.netProfit >= 0 ? "text-base md:text-lg font-black text-emerald-700" : "text-base md:text-lg font-black text-rose-600";
+            
+            let cumProfitText = document.getElementById('kpi-cum-profit');
+            cumProfitText.innerText = "NT$ " + Math.round(last.cumProfit).toLocaleString();
+            cumProfitText.className = last.cumProfit >= 0 ? "font-bold text-emerald-700" : "font-bold text-rose-600";
+
+            // B. 員工流動率
+            let kpiTurnover = document.getElementById('kpi-turnover');
+            kpiTurnover.innerText = Math.round(last.TR) + "%";
+            kpiTurnover.className = last.TR < 50 ? "text-lg md:text-xl font-black text-emerald-700" : (last.TR < 100 ? "text-lg md:text-xl font-black text-amber-600" : "text-lg md:text-xl font-black text-rose-600");
+
+            let turnoverStatus = document.getElementById('kpi-turnover-status');
+            if (last.TR < 45) {
+                turnoverStatus.innerHTML = `<i class="fa-solid fa-circle-check"></i> 卓越留任水準`;
+                turnoverStatus.className = "text-[10px] mt-2 flex items-center gap-1 text-emerald-700";
+            } else if (last.TR < 85) {
+                turnoverStatus.innerHTML = `<i class="fa-solid fa-circle-info"></i> 行業平均水準`;
+                turnoverStatus.className = "text-[10px] mt-2 flex items-center gap-1 text-amber-600";
+            } else {
+                turnoverStatus.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> 失敗循環危機`;
+                turnoverStatus.className = "text-[10px] mt-2 flex items-center gap-1 text-rose-600 animate-pulse";
+            }
+
+            // C. 顧客滿意度
+            let kpiCS = document.getElementById('kpi-cs');
+            kpiCS.innerText = Math.round(last.CS) + " / 100";
+            kpiCS.className = last.CS >= 75 ? "text-lg md:text-xl font-black text-emerald-700" : (last.CS >= 50 ? "text-lg md:text-xl font-black text-amber-600" : "text-lg md:text-xl font-black text-rose-600");
+
+            let csStatus = document.getElementById('kpi-cs-status');
+            if (last.CS >= 75) {
+                csStatus.innerHTML = `<i class="fa-solid fa-face-grin-stars"></i> 五星好評湧入`;
+                csStatus.className = "text-[10px] mt-2 flex items-center gap-1 text-emerald-700";
+            } else if (last.CS >= 50) {
+                csStatus.innerHTML = `<i class="fa-solid fa-face-smile"></i> 水準普通平穩`;
+                csStatus.className = "text-[10px] mt-2 flex items-center gap-1 text-amber-600";
+            } else {
+                csStatus.innerHTML = `<i class="fa-solid fa-face-frown"></i> 客服爆發投訴`;
+                csStatus.className = "text-[10px] mt-2 flex items-center gap-1 text-rose-600 animate-pulse";
+            }
+
+            // D. 顧客忠誠度
+            document.getElementById('kpi-loyalty').innerText = Math.round(last.CL) + "%";
+            document.getElementById('kpi-loyalty').className = last.CL >= 55 ? "text-lg md:text-xl font-black text-emerald-700" : (last.CL >= 30 ? "text-lg md:text-xl font-black text-amber-600" : "text-lg md:text-xl font-black text-rose-600");
+            
+            document.getElementById('val-revenue').innerText = "NT$ " + Math.round(last.revenue / 10000).toLocaleString() + " 萬";
+
+            // 3. 更新服務利潤鏈 7 大步驟鏈路圖 (SPC Flow Visualizer)
+            updateSPCFlowNode(1, "1. 內部服務品質", `技能存量 ${Math.round(last.SK)}｜薪資 ${last.C}`, last.SK >= 55 && last.C >= 45 ? 'good' : (last.SK >= 30 ? 'med' : 'bad'));
+            updateSPCFlowNode(2, "2. 員工滿意／福祉", `滿意 ${Math.round(last.ES)}｜福祉 ${Math.round(last.WB)}`, (last.ES >= 70 && last.WB >= 60) ? 'good' : (last.ES >= 45 ? 'med' : 'bad'));
+            updateSPCFlowNode(3, "3. 員工留任", `留任 ${Math.round(last.EL)}%`, last.EL >= 75 ? 'good' : (last.EL >= 55 ? 'med' : 'bad'));
+            updateSPCFlowNode(4, "4. 員工生產力", `生產力 ${Math.round(last.P)}`, last.P >= 65 ? 'good' : (last.P >= 45 ? 'med' : 'bad'));
+            updateSPCFlowNode(5, "5. 外部服務品質", `服務品質 ${Math.round(last.ESQ)}`, last.ESQ >= 65 ? 'good' : (last.ESQ >= 40 ? 'med' : 'bad'));
+            updateSPCFlowNode(6, "6. 顧客滿意度", `客滿 ${Math.round(last.CS)}`, last.CS >= 75 ? 'good' : (last.CS >= 50 ? 'med' : 'bad'));
+            updateSPCFlowNode(7, "7. 顧客忠誠度", `回頭率 ${Math.round(last.CL)}%`, last.CL >= 60 ? 'good' : (last.CL >= 30 ? 'med' : 'bad'));
+            updateSPCFlowNode(8, "8. 企業績效", last.netProfit >= 0 ? "盈利成長" : "仍在虧損", last.netProfit >= 0 ? 'good' : 'bad');
+        }
+
+        function updateSPCFlowNode(id, stepTitle, subText, status) {
+            let el = document.getElementById('spc-' + id);
+            let valEl = document.getElementById('spc-val-' + id);
+            
+            // 基礎 Icon 判斷
+            let iconHtml = "";
+            if (id === 1) iconHtml = `<i class="fa-solid fa-briefcase text-lg"></i>`;
+            if (id === 2) iconHtml = `<i class="fa-solid ${status === 'good' ? 'fa-face-grin' : (status === 'med' ? 'fa-face-meh' : 'fa-face-frown')} text-lg"></i>`;
+            if (id === 3) iconHtml = `<i class="fa-solid fa-id-card-clip text-lg"></i>`;
+            if (id === 4) iconHtml = `<i class="fa-solid fa-bolt text-lg"></i>`;
+            if (id === 5) iconHtml = `<i class="fa-solid fa-concierge-bell text-lg"></i>`;
+            if (id === 6) iconHtml = `<i class="fa-solid fa-award text-lg"></i>`;
+            if (id === 7) iconHtml = `<i class="fa-solid fa-arrow-rotate-left text-lg"></i>`;
+            if (id === 8) iconHtml = `<i class="fa-solid fa-chart-line text-lg"></i>`;
+
+            if (status === 'good') {
+                el.className = "bg-emerald-50 p-3 rounded-xl border border-emerald-200 flex flex-col justify-between h-28 text-emerald-800 transition-all duration-300 transform scale-105 shadow-sm";
+                valEl.className = "font-bold text-emerald-700 text-[10px]";
+                el.innerHTML = `<div class="text-[9px] font-black uppercase text-emerald-700">${stepTitle}</div><div class="my-1 flex justify-center text-emerald-600">${iconHtml}</div><div id="spc-val-${id}" class="font-bold text-emerald-800 text-[10px]">${subText}</div>`;
+            } else if (status === 'med') {
+                el.className = "bg-amber-50 p-3 rounded-xl border border-amber-200 flex flex-col justify-between h-28 text-amber-800 transition-all duration-300";
+                valEl.className = "font-bold text-amber-700 text-[10px]";
+                el.innerHTML = `<div class="text-[9px] font-black uppercase text-amber-700">${stepTitle}</div><div class="my-1 flex justify-center text-amber-600">${iconHtml}</div><div id="spc-val-${id}" class="font-bold text-amber-800 text-[10px]">${subText}</div>`;
+            } else {
+                el.className = "bg-rose-50 p-3 rounded-xl border border-rose-200 flex flex-col justify-between h-28 text-rose-800 transition-all duration-300";
+                valEl.className = "font-bold text-rose-700 text-[10px]";
+                el.innerHTML = `<div class="text-[9px] font-black uppercase text-rose-700">${stepTitle}</div><div class="my-1 flex justify-center text-rose-600">${iconHtml}</div><div id="spc-val-${id}" class="font-bold text-rose-800 text-[10px]">${subText}</div>`;
+            }
+        }
+
+        // === 12. 圖表控制與繪製 (Chart.js) ===
+        function initCharts() {
+            // 財務圖表 (財務收支走勢圖)
+            let ctxFinance = document.getElementById('financeChart').getContext('2d');
+            financeChart = new Chart(ctxFinance, {
+                type: 'line',
+                data: {
+                    labels: ['Q0'],
+                    datasets: [
+                        {
+                            label: '本季淨損益',
+                            data: [-2485000],
+                            borderColor: '#e11d48',
+                            backgroundColor: 'rgba(225, 29, 72, 0.05)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: '累計損益',
+                            data: [-2485000],
+                            borderColor: '#0284c7',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#334155', boxWidth: 10, font: { size: 9 } }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { color: 'rgba(148, 163, 184, 0.15)' }, ticks: { color: '#475569', font: { size: 9 } } },
+                        y: { grid: { color: 'rgba(148, 163, 184, 0.15)' }, ticks: { color: '#475569', font: { size: 9 } } }
+                    }
+                }
+            });
+
+            // 雙核心指標圖表 (流動率與滿意度變化)
+            let ctxKpi = document.getElementById('kpiChart').getContext('2d');
+            kpiChart = new Chart(ctxKpi, {
+                type: 'line',
+                data: {
+                    labels: ['Q0'],
+                    datasets: [
+                        {
+                            label: '基層流動率 %',
+                            data: [112.4],
+                            borderColor: '#be123c',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            tension: 0.3
+                        },
+                        {
+                            label: '顧客滿意度 %',
+                            data: [42.1],
+                            borderColor: '#0d9488',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#334155', boxWidth: 10, font: { size: 9 } }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { color: 'rgba(148, 163, 184, 0.15)' }, ticks: { color: '#475569', font: { size: 9 } } },
+                        y: { grid: { color: 'rgba(148, 163, 184, 0.15)' }, ticks: { color: '#475569', font: { size: 9 } }, max: 200, min: 0 }
+                    }
+                }
+            });
+        }
+
+        function updateCharts() {
+            let labels = history.map(h => 'Q' + h.q);
+            let netProfits = history.map(h => Math.round(h.netProfit));
+            let cumProfits = history.map(h => Math.round(h.cumProfit));
+            let turnovers = history.map(h => Math.round(h.TR));
+            let customerSats = history.map(h => Math.round(h.CS));
+
+            // 更新財務
+            financeChart.data.labels = labels;
+            financeChart.data.datasets[0].data = netProfits;
+            financeChart.data.datasets[0].borderColor = netProfits[netProfits.length - 1] >= 0 ? '#10b981' : '#e11d48';
+            financeChart.data.datasets[0].backgroundColor = netProfits[netProfits.length - 1] >= 0 ? 'rgba(16, 185, 129, 0.05)' : 'rgba(225, 29, 72, 0.05)';
+            financeChart.data.datasets[1].data = cumProfits;
+            financeChart.update();
+
+            // 更新 KPI
+            kpiChart.data.labels = labels;
+            kpiChart.data.datasets[0].data = turnovers;
+            kpiChart.data.datasets[1].data = customerSats;
+            kpiChart.update();
+        }
+    </script>
+</body>
+</html>
